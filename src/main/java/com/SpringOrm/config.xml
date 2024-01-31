@@ -1,0 +1,42 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xmlns:context="http://www.springframework.org/schema/context"  
+ xmlns:p="http://www.springframework.org/schema/p"  
+ xmlns:tx="http://www.springframework.org/schema/tx"  
+ xsi:schemaLocation="http://www.springframework.org/schema/beans 
+ http://www.springframework.org/schema/beans/spring-beans.xsd  
+ http://www.springframework.org/schema/context 
+ http://www.springframework.org/schema/context/spring-context.xsd
+ http://www.springframework.org/schema/tx 
+ http://www.springframework.org/schema/tx/spring-tx.xsd">
+  
+  <context:annotation-config/>
+  <context:component-scan base-package="com.SpringOrm , com.SpringOrm.Dao , com.SpringOrm.entities"/>
+  <tx:annotation-driven/><!--  you have to activate this annotation by editing the schema and schema location so that you can perform write operation such as insert and update, by default the data base is in only read mode, to make it in read-write mode , you have to turn on this tag and also use @Transactionl annotation above the method that perofram write operations such as insert,update etc. -->
+  
+  <bean class = "org.springframework.jdbc.datasource.DriverManagerDataSource" name = "dataSource" p:driverClassName = "com.mysql.cj.jdbc.Driver" p:username = "root" p:password = "Om/525325..??" p:url = "jdbc:mysql://localhost:3306/springHibernate"/>
+  
+  <bean class = "org.springframework.orm.hibernate5.LocalSessionFactoryBean" name = "localSF">
+  <property name="dataSource" ref = "dataSource"/>
+  <property name="hibernateProperties">
+  	<props>
+  		<prop key = "hibernate.dialect">org.hibernate.dialect.MySQL55Dialect</prop>
+  		<prop key = "hibernate.show_sql"> true </prop>
+  		<prop key = "hibernate.hbm2ddl.auto">update	</prop>
+  	</props>
+  </property>
+  <property name="annotatedClasses">
+  	<list>
+  		<value>com.SpringOrm.entities.Student</value>
+  	</list>
+  </property>
+  </bean>
+  
+  <bean class = "org.springframework.orm.hibernate5.HibernateTemplate" name = "hibernateTemplate" p:sessionFactory-ref = "localSF"/>
+  
+ <bean class = "org.springframework.orm.hibernate5.HibernateTransactionManager" name = "transactionManager" p:sessionFactory-ref = "localSF"/> <!--  the name of this bean should be compulsory be "transactionManaget" or else you will get an error which will say "no bean named transactionManager found" -->
+  
+  
+  
+</beans>
